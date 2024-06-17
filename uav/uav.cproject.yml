@@ -1,0 +1,32 @@
+# A project translates into one executable or library.
+project:
+
+  groups:
+    - group: Source Files
+      files:
+        - file: ./main.cpp
+
+  # List components to use for your application.
+  # A software component is a re-usable unit that may be configurable.
+  components:
+    - component: ARM::CMSIS:CORE
+    - component: Device:Startup
+    - component: ARM::CMSIS:RTOS2:FreeRTOS&Cortex-M
+    - component: ARM::RTOS&FreeRTOS:Config&CMSIS RTOS2@11.1.0
+    - component: ARM::RTOS&FreeRTOS:Core&Cortex-M@11.1.0
+    - component: ARM::RTOS&FreeRTOS:Event Groups@11.1.0
+    - component: ARM::RTOS&FreeRTOS:Timers@11.1.0
+    - component: ARM::RTOS&FreeRTOS:Heap&Heap_1@11.1.0
+    - component: Keil::Device:STM32Cube HAL:Common@1.3.0
+    - component: Keil::Device:STM32Cube HAL:RCC@1.3.0
+    - component: Keil::Device:STM32Cube HAL:GPIO@1.3.0
+    - component: Keil::Device:STM32Cube HAL:DMA@1.3.0
+    - component: Keil::Device:STM32Cube Framework:Classic@1.3.0
+    - component: Keil::Device:STM32Cube HAL:Cortex@1.3.0
+    - component: Keil::Device:STM32Cube HAL:PWR@1.3.0
+    - component: ARM::CMSIS:OS Tick:SysTick@1.0.5
+    - component: Keil::CMSIS Driver:I2C
+    - component: Keil::Device:STM32Cube HAL:I2C
+  packs:
+    - pack: ARM::CMSIS-FreeRTOS@11.1.0
+    - pack: ARM::CMSIS-Driver@2.8.0
