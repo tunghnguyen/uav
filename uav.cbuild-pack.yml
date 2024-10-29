@@ -1,0 +1,18 @@
+cbuild-pack:
+  resolved-packs:
+    - resolved-pack: ARM::CMSIS@6.1.0
+      selected-by-pack:
+        - ARM::CMSIS
+        - ARM::CMSIS@6.1.0
+    - resolved-pack: ARM::CMSIS-DSP@1.15.0
+      selected-by-pack:
+        - ARM::CMSIS-DSP@1.15.0
+    - resolved-pack: ARM::CMSIS-FreeRTOS@11.1.0
+      selected-by-pack:
+        - ARM::CMSIS-FreeRTOS@11.1.0
+    - resolved-pack: Keil::NUCLEO-F756ZG_BSP@1.1.0
+      selected-by-pack:
+        - Keil::NUCLEO-F756ZG_BSP@1.1.0
+    - resolved-pack: Keil::STM32F7xx_DFP@2.16.0
+      selected-by-pack:
+        - Keil::STM32F7xx_DFP@2.16.0
