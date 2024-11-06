@@ -1,7 +1,6 @@
 #include "icm20948.hpp"
 
 #include "RTE_Components.h"
-#include <iterator>
 #include CMSIS_device_header // IWYU pragma: keep
 
 #include "quat.hpp"
