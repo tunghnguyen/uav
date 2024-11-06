@@ -22,6 +22,8 @@ struct quat_t {
 
   quat_t &operator*=(quat_t const &rhs);
 
+  quat_t &operator/=(float32_t rhs);
+
   quat_t &normalize();
 };
 
@@ -32,3 +34,5 @@ quat_t operator*(quat_t const &lhs, float32_t rhs);
 quat_t operator*(float32_t lhs, quat_t const &rhs);
 
 quat_t operator*(quat_t const &lhs, quat_t const &rhs);
+
+quat_t operator/(quat_t const &lhs, float32_t rhs);
