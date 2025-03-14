@@ -1,0 +1,4 @@
+[submodule "Libs/Unity"]
+	path = Libs/Unity
+	url = git@github.com:ThrowTheSwitch/Unity.git
+	branch = master
