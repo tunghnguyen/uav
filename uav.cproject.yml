@@ -8,7 +8,6 @@ project:
 
     - component: ARM::CMSIS:CORE
 
-    - component: Keil::CMSIS Driver:GPIO
     - component: Keil::CMSIS Driver:USART
     - component: Keil::CMSIS Driver:I2C
 

@@ -3,69 +3,80 @@
 #include "RTE_Components.h"
 #include CMSIS_device_header // IWYU pragma: keep
 
+#include "buffer.cpp"
 #include "quat.hpp"
+
 #include <cstdint>
 
-ICM20948::ICM20948(I2C_HandleTypeDef &hi2c) : hi2c(hi2c) {
-  // Selects IMU user bank 0
-  uint8_t reg_bank_sel;
-  HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, ICM20948_PWR_MGMT_1,
-                   I2C_MEMADD_SIZE_8BIT, &reg_bank_sel, 1, 1'000);
-  CLEAR_BIT(reg_bank_sel, 0x30);
-  HAL_I2C_Mem_Write(&hi2c, ICM20948_ADDRESS << 1, ICM20948_REG_BANK_SEL,
-                    I2C_MEMADD_SIZE_8BIT, &reg_bank_sel, 1, 1'000);
+ICM20948::ICM20948(I2C_HandleTypeDef &hi2c) : hi2c(hi2c) {}
 
-  // Wakes IMU from sleep mode
-  uint8_t pwr_mgmt1;
-  HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, ICM20948_PWR_MGMT_1,
-                   I2C_MEMADD_SIZE_8BIT, &pwr_mgmt1, 1, 1'000);
-  CLEAR_BIT(reg_bank_sel, 0x40);
-  HAL_I2C_Mem_Write(&hi2c, ICM20948_ADDRESS << 1, ICM20948_PWR_MGMT_1,
-                    I2C_MEMADD_SIZE_8BIT, &pwr_mgmt1, 1, 1'000);
-
-  uint8_t ctrl = 0x08U;
-  HAL_I2C_Mem_Write(&hi2c, AK09916_ADDRESS << 1U, AK09916_USER_CTRL,
-                    I2C_MEMADD_SIZE_8BIT, &ctrl, 1, 1'000);
+void ICM20948::init() {
+  // Wakes from sleep mode
+  modReg(ICM20948_REG_BANK_SEL, 0x00, 0x00);
+  modReg(ICM20948_PWR_MGMT_1, 0x40, 0x00);
 }
 
-quat_t ICM20948::getAccel() const {
-  uint8_t accels[6];
+void ICM20948::startSensorsIT() {
+  HAL_I2C_Mem_Read_IT(&hi2c, ICM20948_ADDRESS << 1, ICM20948_ACCEL_XOUT_H,
+                      I2C_MEMADD_SIZE_8BIT, sensors_buf, 12);
+}
+
+void ICM20948::complSensorsIT() {
+  updateBuf();
+}
+
+void ICM20948::startSensorsPoll() {
   HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, ICM20948_ACCEL_XOUT_H,
-                   I2C_MEMADD_SIZE_8BIT, accels, 6, 1'000);
-
-  quat_t val;
-  val.w = 0.0f;
-  val.x = (int16_t)((accels[0] << 8) | accels[1]) / accel_sen;
-  val.y = (int16_t)((accels[2] << 8) | accels[3]) / accel_sen;
-  val.z = (int16_t)((accels[4] << 8) | accels[5]) / accel_sen;
-
-  return val;
+                   I2C_MEMADD_SIZE_8BIT, sensors_buf, 12, 100);
+  updateBuf();
 }
 
-quat_t ICM20948::getGyro() const {
-  uint8_t gyros[6];
-  HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, ICM20948_GYRO_XOUT_H,
-                   I2C_MEMADD_SIZE_8BIT, gyros, 6, 1'000);
-
-  quat_t val;
-  val.w = 0.0f;
-  val.x = (int16_t)((gyros[0] << 8) | gyros[1]) / gyro_sen;
-  val.y = (int16_t)((gyros[2] << 8) | gyros[3]) / gyro_sen;
-  val.z = (int16_t)((gyros[4] << 8) | gyros[5]) / gyro_sen;
-
-  return val;
+vec3_t ICM20948::getAccel() const {
+  return accel.read();
 }
 
-quat_t ICM20948::getMag() const {
-  uint8_t mags[6];
-  HAL_I2C_Mem_Read(&hi2c, AK09916_ADDRESS < 1, AK09916_MAG_XOUT_L,
-                   I2C_MEMADD_SIZE_8BIT, mags, 6, 1'000);
+vec3_t ICM20948::getGyro() const {
+  return gyro.read();
+}
 
-  quat_t val;
-  val.w = 0.0f;
-  val.x = (int16_t)(mags[0] | (mags[1] << 8)) * mag_sen;
-  val.y = (int16_t)(mags[2] | (mags[3] << 8)) * mag_sen;
-  val.z = (int16_t)(mags[4] | (mags[5] << 8)) * mag_sen;
+vec3_t ICM20948::getMag() const {
+  return mag.read();
+}
 
-  return val;
+void ICM20948::modReg(uint16_t reg, uint8_t clr_msk, uint8_t set_msk) {
+  uint8_t tmp;
+  HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
+                   &tmp, 1, 1'000);
+  MODIFY_REG(tmp, clr_msk, set_msk);
+  HAL_I2C_Mem_Write(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
+                    &tmp, 1, 1'000);
+}
+
+void ICM20948::setReg(uint16_t reg, uint8_t val) {
+  uint8_t tmp = val;
+  HAL_I2C_Mem_Write(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
+                    &tmp, 1, 1'000);
+}
+
+uint8_t ICM20948::getReg(uint16_t reg) {
+  uint8_t tmp;
+  HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
+                   &tmp, 1, 1'000);
+  return tmp;
+}
+
+void ICM20948::updateBuf() {
+  vec3_t accel_tmp;
+  accel_tmp.x = (int16_t)((sensors_buf[0] << 8) | sensors_buf[1]) / accel_sen;
+  accel_tmp.y = (int16_t)((sensors_buf[2] << 8) | sensors_buf[3]) / accel_sen;
+  accel_tmp.z = (int16_t)((sensors_buf[4] << 8) | sensors_buf[5]) / accel_sen;
+
+  accel.write(accel_tmp);
+
+  vec3_t gyro_tmp;
+  gyro_tmp.x = (int16_t)((sensors_buf[6] << 8) | sensors_buf[7]) / gyro_sen;
+  gyro_tmp.y = (int16_t)((sensors_buf[8] << 8) | sensors_buf[9]) / gyro_sen;
+  gyro_tmp.z = (int16_t)((sensors_buf[10] << 8) | sensors_buf[11]) / gyro_sen;
+
+  gyro.write(gyro_tmp);
 }

@@ -1,28 +1,51 @@
 #include "main.h"
 
 #include "icm20948.hpp"
-#include "quat.hpp"
+// #include "quat.hpp"
 
-#include "FreeRTOS.h" // IWYU pragma: keep
-#include "stdio.h"
-#include "task.h"
+#include "cmsis_os2.h"
+
+#include <stdio.h>
 
 extern I2C_HandleTypeDef hi2c1;
 
-int app_main(void) {
-  ICM20948 icm20948(hi2c1);
-  IMU *imu = &icm20948;
+static osTimerId_t imu_tim;
+static osSemaphoreId_t ctrl_semphr;
+static osThreadId_t ctrl_handl;
 
-  quat_t accel;
-  quat_t gyro;
+static ICM20948 imu(hi2c1);
 
-  for (;;) {
-    accel = imu->getAccel();
-    gyro = imu->getGyro();
-    printf("\n%.2f, %.2f, %.2f", accel.x, accel.y, accel.z);
-    printf("\n%.2f, %.2f, %.2f", gyro.x, gyro.y, gyro.z);
-    HAL_Delay(500);
+void imuCallback(void *arg) {
+  imu.startSensorsIT();
+}
+
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+  if (hi2c == &hi2c1) {
+    imu.complSensorsIT();
+    osSemaphoreRelease(ctrl_semphr);
   }
+}
+
+void ctrl(void *arg) {
+  for (;;) {
+    osSemaphoreAcquire(ctrl_semphr, osWaitForever);
+    // TODO: Use sensors
+  }
+}
+
+int app_main(void) {
+  imu.init();
+
+  ctrl_semphr = osSemaphoreNew(1, 0, NULL);
+
+  imu_tim = osTimerNew(imuCallback, osTimerPeriodic, NULL, NULL);
+  osTimerStart(imu_tim, 1'000);
+
+  osKernelInitialize();
+  osThreadNew(ctrl, NULL, NULL);
+  osKernelStart();
+
+  for (;;);
 
   return 0;
 }

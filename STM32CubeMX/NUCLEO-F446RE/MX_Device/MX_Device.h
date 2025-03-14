@@ -1,6 +1,6 @@
 /******************************************************************************
  * File Name   : MX_Device.h
- * Date        : 03/02/2025 00:47:46
+ * Date        : 25/02/2025 01:29:27
  * Description : STM32Cube MX parameter definitions
  * Note        : This file is generated with a generator out of the
  *               STM32CubeMX project and its generated files (DO NOT EDIT!)
@@ -26,7 +26,7 @@
 #define MX_I2C1_SCL_GPIO_Pin                    GPIO_PIN_8
 #define MX_I2C1_SCL_GPIOx                       GPIOB
 #define MX_I2C1_SCL_GPIO_Mode                   GPIO_MODE_AF_OD
-#define MX_I2C1_SCL_GPIO_PuPd                   GPIO_NOPULL
+#define MX_I2C1_SCL_GPIO_PuPd                   GPIO_PULLUP
 #define MX_I2C1_SCL_GPIO_Speed                  GPIO_SPEED_FREQ_VERY_HIGH
 #define MX_I2C1_SCL_GPIO_AF                     GPIO_AF4_I2C1
 
@@ -35,7 +35,7 @@
 #define MX_I2C1_SDA_GPIO_Pin                    GPIO_PIN_9
 #define MX_I2C1_SDA_GPIOx                       GPIOB
 #define MX_I2C1_SDA_GPIO_Mode                   GPIO_MODE_AF_OD
-#define MX_I2C1_SDA_GPIO_PuPd                   GPIO_NOPULL
+#define MX_I2C1_SDA_GPIO_PuPd                   GPIO_PULLUP
 #define MX_I2C1_SDA_GPIO_Speed                  GPIO_SPEED_FREQ_VERY_HIGH
 #define MX_I2C1_SDA_GPIO_AF                     GPIO_AF4_I2C1
 

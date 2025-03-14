@@ -2,13 +2,18 @@
 
 #include <cstdint>
 
-Buffer::Buffer(int32_t data[], uint32_t cap) : data(data), cap(cap) {}
-
-int32_t Buffer::operator[](uint32_t idx) const {
-  return data[(rear + cap - idx) % cap];
+template <typename T, uint32_t cap>
+T Buffer<T, cap>::operator[](uint32_t k) const {
+  return data[(rear + cap + k) % cap];
 }
 
-void Buffer::push(int32_t val) {
+template <typename T, uint32_t cap>
+T Buffer<T, cap>::read() const {
+  return data[rear];
+}
+
+template <typename T, uint32_t cap>
+void Buffer<T, cap>::write(T val) {
   rear = (rear + 1) % cap;
   data[rear] = val;
 }

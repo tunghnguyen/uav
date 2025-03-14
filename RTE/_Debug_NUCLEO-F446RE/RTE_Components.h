@@ -31,8 +31,6 @@
 #define RTE_RTOS_FreeRTOS_HEAP_1        /* RTOS FreeRTOS Heap 1 */
 /* ARM::RTOS&FreeRTOS:Timers@11.1.0 */
 #define RTE_RTOS_FreeRTOS_TIMERS        /* RTOS FreeRTOS Timers */
-/* Keil::CMSIS Driver:GPIO@1.0.0 */
-#define RTE_Drivers_GPIO0               /* Driver GPIO0 */
 /* Keil::CMSIS Driver:I2C@3.0.0 */
 #define RTE_Drivers_I2C1                /* Driver I2C1 */
 #define RTE_Drivers_I2C2                /* Driver I2C2 */

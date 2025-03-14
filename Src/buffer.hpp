@@ -2,16 +2,18 @@
 
 #include <cstdint>
 
+template <typename T, uint32_t cap>
 class Buffer {
 private:
-  int32_t *data;
-  uint32_t cap;
+  T data[cap];
   uint32_t rear = 0;
 
 public:
-  Buffer(int32_t data[], uint32_t cap);
+  Buffer() = default;
 
-  int32_t operator[](uint32_t idx) const;
+  T operator[](uint32_t k) const;
 
-  void push(int32_t val);
+  T read() const;
+
+  void write(T val);
 };
