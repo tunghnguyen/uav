@@ -35,8 +35,12 @@ project:
       files:
         - file: Src/uav.cpp
         - file: Src/icm20948.cpp
+        - file: Src/sg90.cpp
+        - file: Src/pid.cpp
         - file: Src/buffer.cpp
         - file: Src/quat.cpp
+    - group: Board IO
+      files:
         - file: Src/retarget_stdio.c
           define:
             - RETARGET_STDIO_UART: 2

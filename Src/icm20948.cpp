@@ -46,22 +46,22 @@ vec3_t ICM20948::getMag() const {
 void ICM20948::modReg(uint16_t reg, uint8_t clr_msk, uint8_t set_msk) {
   uint8_t tmp;
   HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
-                   &tmp, 1, 1'000);
+                   &tmp, 1, 1000);
   MODIFY_REG(tmp, clr_msk, set_msk);
   HAL_I2C_Mem_Write(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
-                    &tmp, 1, 1'000);
+                    &tmp, 1, 1000);
 }
 
 void ICM20948::setReg(uint16_t reg, uint8_t val) {
   uint8_t tmp = val;
   HAL_I2C_Mem_Write(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
-                    &tmp, 1, 1'000);
+                    &tmp, 1, 1000);
 }
 
 uint8_t ICM20948::getReg(uint16_t reg) {
   uint8_t tmp;
   HAL_I2C_Mem_Read(&hi2c, ICM20948_ADDRESS << 1, reg, I2C_MEMADD_SIZE_8BIT,
-                   &tmp, 1, 1'000);
+                   &tmp, 1, 1000);
   return tmp;
 }
 

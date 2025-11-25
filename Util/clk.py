@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-TARGET_F = 100
+TARGET_F = 50
 CLOCK_MCU = 84000000
 TOLERANCE = 0.0
 

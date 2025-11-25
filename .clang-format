@@ -5,13 +5,7 @@ AlignTrailingComments: Always
 
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortLambdasOnASingleLine: Inline
-AllowShortLoopsOnASingleLine: true
 
 BreakTemplateDeclarations: Yes
-
-IntegerLiteralSeparator:
-  Binary: 4
-  Decimal: 3
-  Hex: 2
 
 InsertNewlineAtEOF: true

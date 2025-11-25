@@ -1,5 +1,5 @@
 generator-import:
-  for-device: STM32F446RETx
+  for-device: STMicroelectronics::STM32F446RETx
   for-board: NUCLEO-F446RE
   define:
     - USE_HAL_DRIVER

@@ -107,10 +107,10 @@ class ICM20948 : public IMU {
 private:
   I2C_HandleTypeDef &hi2c;
 
-  const float32_t accel_sen = 16'384.0 / (PI / 180.0); // [ LSB/(rad/s) ]
-  const float32_t gyro_sen = 131.0 / 9.80665;          // [ LSB/(m/s^2) ]
-  const float32_t mag_sen = 0.15;                      // [   uT/LSB    ]
-  const uint8_t odr = 125;                             // [     Hz      ]
+  const float32_t accel_sen = 16384.0 / 9.80665;   // [ LSB/(m/s^2) ]
+  const float32_t gyro_sen = 131.0 / (PI / 180.0); // [ LSB/(rad/s) ]
+  const float32_t mag_sen = 0.15;                  // [   uT/LSB    ]
+  const uint8_t odr = 125;                         // [     Hz      ]
 
   uint8_t sensors_buf[12];
 
