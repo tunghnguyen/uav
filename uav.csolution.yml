@@ -1,6 +1,6 @@
 # A solution is a collection of related projects that share same base configuration.
 solution:
-  created-for: CMSIS-Toolbox@2.6.0
+  created-for: CMSIS-Toolbox@2.12.0
   cdefault:
 
   # List of tested compilers that can be selected
@@ -21,6 +21,15 @@ solution:
     - type: NUCLEO-F446RE
       board: STMicroelectronics::NUCLEO-F446RE
       device: STMicroelectronics::STM32F446RETx
+      target-set:
+        - set:
+          images:
+            - project-context: uav.Debug
+          debugger:
+            name: ST-Link@pyOCD
+            port: 3333
+            protocol: swd
+            clock: 4000000
 
   # List of different build configurations.
   build-types:
